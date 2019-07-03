@@ -1,4 +1,4 @@
-package org.edwardlol.petrohead.entities.post;
+package org.edwardlol.petrohead.entities.topic;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -20,7 +20,7 @@ public class Tag {
 
     @ManyToMany(mappedBy = "tags", cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<Post> posts;
+    private Set<Topic> topics;
 
     public Tag() {
     }
@@ -49,28 +49,20 @@ public class Tag {
         if (this == o) {
             return true;
         }
-
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         Tag other = (Tag) o;
-
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
-
         return Objects.equals(this.name, other.name);
 
     }
 
     @Override
     public int hashCode() {
-        int result = this.id != null ? this.id.hashCode() : 0;
-
-        result = 31 * result + (this.name != null ? this.name.hashCode() : 0);
-
-        return result;
+        return  31 * this.id.hashCode() + this.name.hashCode();
     }
 
 }

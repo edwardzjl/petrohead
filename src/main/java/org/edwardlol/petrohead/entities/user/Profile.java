@@ -1,9 +1,9 @@
 package org.edwardlol.petrohead.entities.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.commons.validator.routines.EmailValidator;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "profiles")
@@ -18,11 +18,18 @@ public class Profile {
     @JsonIgnore
     private User user;
 
-    private String emailAddress;
-
     private Gender gender;
 
+    @Temporal(TemporalType.DATE)
+    private Date birthday;
+
     public Profile() {
+    }
+
+    // TODO: 2019-07-02 builder?
+    public Profile(User user, Gender gender) {
+        this.user = user;
+        this.gender = gender;
     }
 
     public Long getId() {
@@ -33,19 +40,11 @@ public class Profile {
         return this.user;
     }
 
-    public String getEmailAddress() {
-        return this.emailAddress;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public void setEmailAddress(String emailAddress) throws IllegalArgumentException {
-        if (EmailValidator.getInstance().isValid(emailAddress)) {
-            this.emailAddress = emailAddress;
-        } else {
-            throw new IllegalArgumentException("The input is not a valid email!");
-        }
-    }
-
-    public Gender gender() {
+    public Gender getGender() {
         return this.gender;
     }
 
@@ -53,8 +52,18 @@ public class Profile {
         this.gender = gender;
     }
 
+    public Date getBirthday() {
+        return this.birthday;
+    }
 
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
 
+    @Override
+    public String toString() {
+        return "Profile of " + this.user.toString();
+    }
 
     @Override
     public boolean equals(Object obj) {

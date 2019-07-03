@@ -1,15 +1,16 @@
-package org.edwardlol.petrohead.entities.post;
+package org.edwardlol.petrohead.entities.topic;
 
 import org.edwardlol.petrohead.entities.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "posts")
-public class Post {
+@Table(name = "topics")
+public class Topic {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,21 +19,22 @@ public class Post {
     @NotNull
     private String title; // required
 
-    @NotNull
-    private String link; // required
-
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "author_id", referencedColumnName = "id", nullable = false)
     @NotNull
     private User author; // required
 
     @ManyToMany
-    @JoinTable(name = "post_tag",
-            joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
+    @JoinTable(name = "topic_tag",
+            joinColumns = @JoinColumn(name = "topic_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
     private Set<Tag> tags;
 
     private String content;
+
+    @ManyToOne(targetEntity = Comment.class)
+    @JoinColumn(name = "comment_id", referencedColumnName = "id", nullable = false)
+    private List<Comment> comments;
 
     private Boolean stickied;
 
@@ -41,7 +43,7 @@ public class Post {
     private Timestamp created, modified;
 
 
-    public Post() {
+    public Topic() {
     }
 
 
@@ -68,6 +70,10 @@ public class Post {
     }
 
 
+    @Override
+    public String toString() {
+        return "Topic{title=" + this.title + "}";
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -79,7 +85,7 @@ public class Post {
             return false;
         }
 
-        Post other = (Post) o;
+        Topic other = (Topic) o;
 
         return this.id.equals(other.id);
     }
