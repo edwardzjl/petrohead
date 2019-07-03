@@ -13,7 +13,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "user")
+@RequestMapping(path = "/user")
 public class UserService {
 
     @Autowired
@@ -52,13 +52,14 @@ public class UserService {
 
     //---------- Update a User -----------------
 
-    @PutMapping(path = "update")
+    @PutMapping(path = "/update")
     public ResponseEntity<?> updateUser(@Valid @RequestBody User user) {
         User userInDB = userRepository.findById(user.getId()).orElse(null);
         if (userInDB == null) {
             return new ResponseEntity<>("This user does not exists.", HttpStatus.NOT_FOUND);
         }
 
+        // TODO: 2019/7/3 update logic deal with empty atttributes
 
         userInDB = userRepository.save(userInDB);
         return new ResponseEntity<>("The user has been updated.", HttpStatus.OK);
