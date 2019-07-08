@@ -33,16 +33,19 @@ public class UserService {
 
     /**
      *
-     * must create a new user
+     * must newInstance a new user
      * or return 500 error "attempted to assign id from null one-to-one property"
      *
      * @param user
      * @return
      */
-    @PostMapping(path = "/create")
+    @PostMapping(path = "/newInstance")
     public ResponseEntity<User> addNewUser(@Valid @RequestBody User user) {
 
         User newUser = User.create(user.getUsername());
+
+        newUser.setEmailAddress(user.getEmailAddress());
+
         Profile profile = new Profile(newUser, user.getProfile().getGender());
         user.setProfile(profile);
 

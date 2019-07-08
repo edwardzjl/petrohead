@@ -10,14 +10,20 @@ import java.util.Objects;
 @Table(name = "users")
 public class User {
 
+    /**
+     * Primary key of table users.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    /**
+     * The username of this user. Must not be null, but can be modified.
+     */
     @NotNull
     private String username;
 
-    // TODO: 2019-07-02 go into security service before do anything here.
+    // TODO: 2019-07-02 dive into security service before do anything here.
     private String passwordHash;
     
     private String emailAddress;
@@ -25,8 +31,7 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private Profile profile;
 
-    public User() {
-    }
+
 
     private User(String username) {
         this.username = username;

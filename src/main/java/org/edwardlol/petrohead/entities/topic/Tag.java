@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -16,21 +17,21 @@ public class Tag {
     private Long id;
 
     @NotNull
-    private String name;
+    private final String name;
 
+    /**
+     * A set of topics all have this tag.
+     */
     @ManyToMany(mappedBy = "tags", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Topic> topics;
 
-    public Tag() {
-    }
-
     private Tag(String name) {
         this.name = name;
+        this.topics = new HashSet<>();
     }
 
-    // TODO: 2019-07-02 should it be a builder?
-    public static Tag create(Long id, String name) {
+    public static Tag newInstance(String name) {
         return new Tag(name);
     }
 
@@ -43,6 +44,15 @@ public class Tag {
         return this.name;
     }
 
+    public Set<Topic> getTopics() {
+        return this.topics;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Tag{" + this.name + "}";
+    }
 
     @Override
     public boolean equals(Object o) {

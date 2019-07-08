@@ -28,7 +28,7 @@ public class PetroheadApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		User judy = User.create("Judy");
-		Profile judyProfile = new Profile(judy, Gender.Female);
+		Profile judyProfile = Profile.of(judy).with(Gender.Female).build();
 		judyProfile.setBirthday(new SimpleDateFormat("MM/dd/yyyy").parse(("4/12/2010")));
 
 		judy.setProfile(judyProfile);

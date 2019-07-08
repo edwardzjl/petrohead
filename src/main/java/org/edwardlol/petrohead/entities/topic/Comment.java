@@ -6,6 +6,7 @@ import org.edwardlol.petrohead.entities.user.User;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+// TODO: 2019-07-05 finish this
 @Entity
 @Table(name = "comments")
 public class Comment {
@@ -20,6 +21,8 @@ public class Comment {
     private User author;
 
     private String content;
+
+
 
     public Comment() {
     }
