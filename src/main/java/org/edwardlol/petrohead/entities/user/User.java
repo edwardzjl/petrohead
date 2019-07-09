@@ -1,30 +1,37 @@
 package org.edwardlol.petrohead.entities.user;
 
+import com.google.common.base.Preconditions;
 import org.apache.commons.validator.routines.EmailValidator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.Objects;
 
 /**
- *
  * The {@code User} class.
  * The optional information is stored in {@code Profile} class, this class mainly stores the identity information.
  *
- * @author  Junlin Chow
- * @since   0.0.1
+ * @author Junlin Chow
+ * @since 0.0.1
  */
 @Entity
 @Table(name = "users")
 public class User {
 
-    // TODO: 2019-07-08 make this configurable by a config file
+    //----------- statis fields -----------
+
+    // TODO: 2019-07-08 make this configurable by a config file?
     /**
      * user can change their username after every certain perioid.
      */
-    static Period CHANGE_NAME_PERIODS = Period.ofMonths(1);
+    private static Integer CHANGE_NAME_PERIOD_MONTHS = 1;
+
+    private static Integer CHANGE_NAME_POINTS = 100;
+
+    //----------- getter / setters -----------
 
     /**
      * Primary key createWithUsername table users.
@@ -43,17 +50,21 @@ public class User {
     /**
      * When this user is created.
      */
+    @NotNull
     private final LocalDateTime createTime;
 
     /**
      * Last time this user changed his username.
      */
+    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime usernameLastModifiedTime;
 
     // TODO: 2019-07-02 dive into security service before do anything here.
+    @NotNull
     private String passwordHash;
-    
+
+    @Column(unique = true)
     private String emailAddress;
 
     /**
@@ -63,7 +74,7 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private Profile profile;
 
-
+    //----------- constructors -----------
 
     private User(Builder builder) {
         this.username = builder.username;
@@ -73,9 +84,7 @@ public class User {
         this.emailAddress = builder.emailAddress;
     }
 
-
     //----------- getter / setters -----------
-
 
     public Long getId() {
         return this.id;
@@ -85,8 +94,18 @@ public class User {
         return this.username;
     }
     public void setUsername(String username) {
-        // TODO: 2019-07-08 check last modified time
+        Preconditions.checkArgument(this.profile.getPoints() > CHANGE_NAME_POINTS,
+                "You don't have enough points!");
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDate start = now.toLocalDate();
+        LocalDate end = this.usernameLastModifiedTime.toLocalDate();
+
+        Preconditions.checkArgument(Period.between(start, end).getMonths() > CHANGE_NAME_PERIOD_MONTHS,
+                "You can only change your ");
+
         this.username = username;
+        this.usernameLastModifiedTime = now;
     }
 
     public LocalDateTime getCreateTime() {
@@ -104,6 +123,7 @@ public class User {
     public String getEmailAddress() {
         return this.emailAddress;
     }
+
     public void setEmailAddress(String emailAddress) throws IllegalArgumentException {
         if (EmailValidator.getInstance().isValid(emailAddress)) {
             this.emailAddress = emailAddress;
@@ -115,13 +135,12 @@ public class User {
     public Profile getProfile() {
         return this.profile;
     }
+
     public void setProfile(Profile profile) {
         this.profile = profile;
     }
 
-
     //----------- object methods -----------
-
 
     @Override
     public String toString() {
@@ -130,27 +149,19 @@ public class User {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
+        if (this == obj) return true;
+        if (!(obj instanceof User)) return false;
+
         User other = (User) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        return Objects.equals(this.username, other.username);
+        return this.id != null && this.id.equals(other.getId());
     }
 
     @Override
     public int hashCode() {
-        return 31 * this.id.hashCode() + this.username.hashCode();
+        return 31;
     }
 
-
     //----------- builder -----------
-
 
     public static Builder createWithUsername(String username) {
         return new Builder(username);

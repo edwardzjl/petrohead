@@ -18,8 +18,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
 
 
@@ -35,42 +34,30 @@ public class UserTests {
     private UserRepository userRepository;
 
     @Test
-    public void createUser() {
-        User judy = User.create("Judy");
-        Profile judyProfile = new Profile(judy, Gender.Female);
-
-        try {
-            judyProfile.setBirthday(new SimpleDateFormat("MM/dd/yyyy").parse(("4/12/2010")));
-        } catch (ParseException e) {
-            System.err.println("birthday format error");
-        }
+    public void createUser() throws ParseException {
+        User judy = User.createWithUsername("Judy").build();
+        Profile judyProfile = Profile.of(judy)
+                .gender(Gender.Female)
+                .birthday(new SimpleDateFormat("MM/dd/yyyy").parse(("4/12/2010")))
+                .build();
 
         judy.setProfile(judyProfile);
         judy = userRepository.save(judy);
-//        entityManager.flush();
         userRepository.flush();
-
-
-//        userRepository.findAll();
 
         UserService userService = new UserService();
         List<User> users = userService.getAllUsers();
-
     }
 
 
     @Test
-    public void whenFindByName_thenReturnEmployee() {
+    public void whenFindByName_thenReturnEmployee() throws ParseException {
         // given
-        User judy = User.create("Judy");
-        Profile judyProfile = new Profile(judy, Gender.Female);
-
-        try {
-            judyProfile.setBirthday(new SimpleDateFormat("MM/dd/yyyy").parse(("4/12/2010")));
-        } catch (ParseException e) {
-            System.err.println("birthday format error");
-        }
-
+        User judy = User.createWithUsername("Judy").build();
+        Profile judyProfile = Profile.of(judy)
+                .gender(Gender.Female)
+                .birthday(new SimpleDateFormat("MM/dd/yyyy").parse(("4/12/2010")))
+                .build();
         judy.setProfile(judyProfile);
 
         entityManager.persist(judy);

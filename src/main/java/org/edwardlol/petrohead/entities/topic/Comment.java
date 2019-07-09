@@ -30,7 +30,9 @@ public class Comment {
 
     private Boolean isAnonymous;
 
-    public Comment() {
+    public Comment(User author) {
+        this.author = author;
+        this.createTime = LocalDateTime.now();
     }
 
 
@@ -51,7 +53,7 @@ public class Comment {
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
-        return Objects.equals(this.username, other.username);
+        return Objects.equals(this.content, other.content);
     }
 
     @Override

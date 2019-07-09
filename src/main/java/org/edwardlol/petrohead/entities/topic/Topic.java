@@ -75,9 +75,9 @@ public class Topic {
         this.author = author;
     }
 
-    private Topic(Builder builder) {
-
-    }
+//    private Topic(Builder builder) {
+//
+//    }
 
     // TODO: 2019-07-02 should it be a builder?
     public static Topic newInstance(String title, User author) {
@@ -143,9 +143,9 @@ public class Topic {
 
 
 
-    public static Builder of() {
-
-    }
+//    public static Builder of() {
+//
+//    }
 
 
     public static final class Builder {
@@ -174,10 +174,10 @@ public class Topic {
             this.builder.content = content;
             return this;
         }
-
-        public Topic build() {
-            return new Topic(this.builder);
-        }
+//
+//        public Topic build() {
+//            return new Topic(this.builder);
+//        }
     }
 
 }

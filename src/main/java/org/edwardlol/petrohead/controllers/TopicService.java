@@ -34,16 +34,16 @@ public class TopicService {
     }
 
 
-    @PostMapping(path = "/post")
-    public ResponseEntity<?> postTopic(@Valid @RequestBody Topic topic) {
-
-//        Topic newTopic = Topic.newInstance(topic.getTitle(), topic.getAuthor());
+//    @PostMapping(path = "/post")
+//    public ResponseEntity<?> postTopic(@Valid @RequestBody Topic topic) {
 //
-//        Profile profile = new Profile(newUser, user.getProfile().getGender());
-//        user.setProfile(profile);
+////        Topic newTopic = Topic.newInstance(topic.getTitle(), topic.getAuthor());
+////
+////        Profile profile = new Profile(newUser, user.getProfile().getGender());
+////        user.setProfile(profile);
+////
+////        newUser = userRepository.save(newUser);
+////        return new ResponseEntity<>(newUser, HttpStatus.OK);
 //
-//        newUser = userRepository.save(newUser);
-//        return new ResponseEntity<>(newUser, HttpStatus.OK);
-
-    }
+//    }
 }
