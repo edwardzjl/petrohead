@@ -1,5 +1,6 @@
 package org.edwardlol.petrohead.entities.user;
 
+
 import com.google.common.base.Preconditions;
 import org.apache.commons.validator.routines.EmailValidator;
 
@@ -8,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
-import java.util.Objects;
+import java.util.Optional;
 
 /**
  * The {@code User} class.
@@ -40,10 +41,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    // TODO: 2019-07-08 should be unique in db.
     /**
      * The username createWithUsername this user. Must not be null, but can be modified.
      */
+    @Column(unique = true)
     @NotNull
     private String username;
 
@@ -93,6 +94,7 @@ public class User {
     public String getUsername() {
         return this.username;
     }
+
     public void setUsername(String username) {
         Preconditions.checkArgument(this.profile.getPoints() > CHANGE_NAME_POINTS,
                 "You don't have enough points!");
@@ -120,8 +122,8 @@ public class User {
         return this.passwordHash;
     }
 
-    public String getEmailAddress() {
-        return this.emailAddress;
+    public Optional<String> getEmailAddress() {
+        return Optional.ofNullable(this.emailAddress);
     }
 
     public void setEmailAddress(String emailAddress) throws IllegalArgumentException {
@@ -168,7 +170,7 @@ public class User {
     }
 
     public static class Builder {
-
+        // TODO: 2019-07-09 build a profile here?
         private final String username;
         private final LocalDateTime createTime;
         private LocalDateTime usernameLastModifiedTime;

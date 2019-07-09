@@ -6,7 +6,6 @@ import org.edwardlol.petrohead.entities.user.User;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 // TODO: 2019-07-05 finish this
 @Entity
@@ -30,9 +29,19 @@ public class Comment {
 
     private Boolean isAnonymous;
 
+
     public Comment(User author) {
         this.author = author;
         this.createTime = LocalDateTime.now();
+    }
+
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public User getAuthor() {
+        return this.author;
     }
 
 
@@ -43,22 +52,16 @@ public class Comment {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
+        if (this == obj) return true;
+        if (!(obj instanceof Comment)) return false;
+
         Comment other = (Comment) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        return Objects.equals(this.content, other.content);
+        return this.id != null && this.id.equals(other.getId());
     }
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return 31;
     }
 
 }

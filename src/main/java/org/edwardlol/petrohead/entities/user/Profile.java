@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.Optional;
 
 
 /**
@@ -70,22 +71,25 @@ public class Profile {
         return this.user;
     }
 
-    public Gender getGender() {
-        return this.gender;
+    public Optional<Gender> getGender() {
+        return Optional.ofNullable(this.gender);
     }
 
     public void setGender(Gender gender) {
         this.gender = gender;
     }
 
-    public Date getBirthday() {
-        return this.birthday;
+    public Optional<Date> getBirthday() {
+        return Optional.ofNullable(this.birthday);
     }
 
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 
+    /**
+     * Description cannot be null, the default value is "".
+     */
     public String getDescription() {
         return this.description;
     }
@@ -94,6 +98,9 @@ public class Profile {
         this.description = description;
     }
 
+    /**
+     * Points cannot be null, the default value is 0.
+     */
     public Integer getPoints() {
         return this.points;
     }
@@ -102,6 +109,9 @@ public class Profile {
         this.points = points;
     }
 
+    /**
+     * Rank cannot be null, the default value is {@code Rank.Private}
+     */
     public Rank getRank() {
         return this.rank;
     }
@@ -136,7 +146,6 @@ public class Profile {
     public static Builder of(User user) {
         return new Builder(user);
     }
-
 
     public static class Builder {
 

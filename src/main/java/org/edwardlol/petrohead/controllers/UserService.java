@@ -43,9 +43,9 @@ public class UserService {
     public ResponseEntity<User> addNewUser(@Valid @RequestBody User user) {
 
         User newUser = User.createWithUsername(user.getUsername()).build();
-        newUser.setEmailAddress(user.getEmailAddress());
+        newUser.setEmailAddress(user.getEmailAddress().orElse(null));
 
-        Profile profile = Profile.of(newUser).gender(user.getProfile().getGender()).build();
+        Profile profile = Profile.of(newUser).gender(user.getProfile().getGender().orElse(null)).build();
         newUser.setProfile(profile);
 
         newUser = userRepository.save(newUser);
