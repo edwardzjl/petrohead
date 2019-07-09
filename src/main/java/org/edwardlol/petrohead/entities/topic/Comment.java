@@ -5,12 +5,17 @@ import org.edwardlol.petrohead.entities.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
-// TODO: 2019-07-05 finish this
+
+/**
+ *
+ */
 @Entity
 @Table(name = "comments")
 public class Comment {
+
+    //----------- instance fields -----------
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,18 +28,20 @@ public class Comment {
 
     private String content;
 
-    private final LocalDateTime createTime;
+    private final Instant createTime;
 
-    private LocalDateTime lastModifiedTime;
+    private Instant lastModifiedTime;
 
     private Boolean isAnonymous;
 
+    //----------- constructors -----------
 
     public Comment(User author) {
         this.author = author;
-        this.createTime = LocalDateTime.now();
+        this.createTime = Instant.now();
     }
 
+    //----------- getter / setters -----------
 
     public Long getId() {
         return this.id;
@@ -44,6 +51,38 @@ public class Comment {
         return this.author;
     }
 
+    public String getContent() {
+        return this.content;
+    }
+
+    public void setContent(String content) {
+        // TODO: 2019-07-09 some constraints
+        this.content = content;
+        setLastModifiedTime(Instant.now());
+    }
+
+    public Instant getCreateTime() {
+        return this.createTime;
+    }
+
+    public Instant getLastModifiedTime() {
+        return this.lastModifiedTime;
+    }
+
+    private void setLastModifiedTime(Instant lastModifiedTime) {
+        this.lastModifiedTime = lastModifiedTime;
+    }
+
+    public Boolean getIsAnonymous() {
+        return this.isAnonymous;
+    }
+
+    public void setIsAnonymous(Boolean isAnonymous) {
+        this.isAnonymous = isAnonymous;
+        setLastModifiedTime(Instant.now());
+    }
+
+    //----------- object methods -----------
 
     @Override
     public String toString() {

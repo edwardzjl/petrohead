@@ -6,7 +6,8 @@ import org.springframework.data.annotation.PersistenceConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
-import java.util.Date;
+//import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -42,10 +43,12 @@ public class Topic {
     private String content;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createTime;
+    private Instant createTime;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date lastModifiedTime;
+    private Instant lastModifiedTime;
+
+    private Integer view;
 
     @ManyToOne(targetEntity = Comment.class)
     @JoinColumn(name = "comment_id", referencedColumnName = "id", nullable = false)

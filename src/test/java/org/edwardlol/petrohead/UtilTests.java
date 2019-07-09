@@ -2,9 +2,7 @@ package org.edwardlol.petrohead;
 
 import org.junit.Test;
 
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.Period;
+import java.time.*;
 
 public class UtilTests {
 
@@ -37,5 +35,14 @@ public class UtilTests {
         start = LocalDate.of(1990, 3, 15);
         end = LocalDate.of(1990, 4, 25);
         System.out.println(Period.between(start, end).getMonths());
+    }
+
+    @Test
+    public void instantVsLocalDateTime() {
+        Instant _start = Instant.parse("1990-03-15T16:01:13.419Z");
+        Instant _end = Instant.parse("1990-04-14T16:01:13.419Z");
+        LocalDate start = LocalDateTime.ofInstant(_start, ZoneId.systemDefault()).toLocalDate();
+        LocalDate end = LocalDateTime.ofInstant(_end, ZoneId.systemDefault()).toLocalDate();
+        System.out.println(Period.between(start, end));
     }
 }

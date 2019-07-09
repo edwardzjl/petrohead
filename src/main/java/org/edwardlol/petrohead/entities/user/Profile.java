@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 
 
@@ -36,13 +36,14 @@ public class Profile {
     @NotNull
     private final User user;
 
-    /**
-     * Can be modified...
-     */
+    private String avatar;
+
+    private String introduction;
+
     private Gender gender;
 
     @Temporal(TemporalType.DATE)
-    private Date birthday;
+    private LocalDate birthday;
 
     private String description;
 
@@ -54,6 +55,8 @@ public class Profile {
 
     private Profile(Builder builder) {
         this.user = builder.user;
+        this.avatar = builder.avatar;
+        this.introduction = builder.introduction;
         this.gender = builder.gender;
         this.birthday = builder.birthday;
         this.description = builder.description;
@@ -71,6 +74,23 @@ public class Profile {
         return this.user;
     }
 
+    public String getAvatar() {
+        return this.avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        // TODO: 2019-07-09 check avatar url
+        this.avatar = avatar;
+    }
+
+    public String getIntroduction() {
+        return this.introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
     public Optional<Gender> getGender() {
         return Optional.ofNullable(this.gender);
     }
@@ -79,11 +99,11 @@ public class Profile {
         this.gender = gender;
     }
 
-    public Optional<Date> getBirthday() {
+    public Optional<LocalDate> getBirthday() {
         return Optional.ofNullable(this.birthday);
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 
@@ -150,8 +170,10 @@ public class Profile {
     public static class Builder {
 
         private final User user;
+        private String avatar;
+        private String introduction = "";
         private Gender gender;
-        private Date birthday;
+        private LocalDate birthday;
         private String description = "";
         private Integer points = 0;
         private Rank rank = Rank.Private;
@@ -160,12 +182,22 @@ public class Profile {
             this.user = user;
         }
 
+        public Builder avatar(String avatar) {
+            this.avatar = avatar;
+            return this;
+        }
+
+        public Builder introduction(String introduction) {
+            this.introduction = introduction;
+            return this;
+        }
+
         public Builder gender(Gender gender) {
             this.gender = gender;
             return this;
         }
 
-        public Builder birthday(Date birthday) {
+        public Builder birthday(LocalDate birthday) {
             this.birthday = birthday;
             return this;
         }

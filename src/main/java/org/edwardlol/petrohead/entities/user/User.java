@@ -6,9 +6,7 @@ import org.apache.commons.validator.routines.EmailValidator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
+import java.time.*;
 import java.util.Optional;
 
 /**
@@ -22,6 +20,8 @@ import java.util.Optional;
 @Table(name = "users")
 public class User {
 
+    // TODO: 2019-07-09 follower, following, collections
+
     //----------- statis fields -----------
 
     // TODO: 2019-07-08 make this configurable by a config file?
@@ -32,7 +32,7 @@ public class User {
 
     private static Integer CHANGE_NAME_POINTS = 100;
 
-    //----------- getter / setters -----------
+    //----------- instance fields -----------
 
     /**
      * Primary key createWithUsername table users.
@@ -52,14 +52,14 @@ public class User {
      * When this user is created.
      */
     @NotNull
-    private final LocalDateTime createTime;
+    private final Instant createTime;
 
     /**
      * Last time this user changed his username.
      */
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime usernameLastModifiedTime;
+    private Instant usernameLastModifiedTime;
 
     // TODO: 2019-07-02 dive into security service before do anything here.
     @NotNull
@@ -67,6 +67,8 @@ public class User {
 
     @Column(unique = true)
     private String emailAddress;
+
+    private Instant lastlogin;
 
     /**
      * A user instance must be created before the creation of his/her profile,
@@ -99,23 +101,27 @@ public class User {
         Preconditions.checkArgument(this.profile.getPoints() > CHANGE_NAME_POINTS,
                 "You don't have enough points!");
 
-        LocalDateTime now = LocalDateTime.now();
-        LocalDate start = now.toLocalDate();
-        LocalDate end = this.usernameLastModifiedTime.toLocalDate();
+        Instant now = Instant.now();
+        LocalDate start = LocalDateTime.ofInstant(now, ZoneId.systemDefault()).toLocalDate();
+        LocalDate end = LocalDateTime.ofInstant(this.usernameLastModifiedTime, ZoneId.systemDefault()).toLocalDate();
 
         Preconditions.checkArgument(Period.between(start, end).getMonths() > CHANGE_NAME_PERIOD_MONTHS,
                 "You can only change your ");
 
         this.username = username;
-        this.usernameLastModifiedTime = now;
+        setUsernameLastModifiedTime(now);
     }
 
-    public LocalDateTime getCreateTime() {
+    public Instant getCreateTime() {
         return this.createTime;
     }
 
-    public LocalDateTime getUsernameLastModifiedTime() {
+    public Instant getUsernameLastModifiedTime() {
         return this.usernameLastModifiedTime;
+    }
+
+    private void setUsernameLastModifiedTime(Instant usernameLastModifiedTime) {
+        this.usernameLastModifiedTime = usernameLastModifiedTime;
     }
 
     public String getPasswordHash() {
@@ -132,6 +138,14 @@ public class User {
         } else {
             throw new IllegalArgumentException("The input is not a valid email!");
         }
+    }
+
+    public Instant getLastlogin() {
+        return this.lastlogin;
+    }
+
+    public void setLastlogin(Instant lastlogin) {
+        this.lastlogin = lastlogin;
     }
 
     public Profile getProfile() {
@@ -172,14 +186,14 @@ public class User {
     public static class Builder {
         // TODO: 2019-07-09 build a profile here?
         private final String username;
-        private final LocalDateTime createTime;
-        private LocalDateTime usernameLastModifiedTime;
+        private final Instant createTime;
+        private Instant usernameLastModifiedTime;
         private String passwordHash;
         private String emailAddress;
 
         private Builder(String username) {
             this.username = username;
-            this.createTime = LocalDateTime.now();
+            this.createTime = Instant.now();
             this.usernameLastModifiedTime = this.createTime;
         }
 
