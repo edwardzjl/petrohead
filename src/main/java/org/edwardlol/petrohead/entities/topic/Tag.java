@@ -20,7 +20,7 @@ public class Tag {
     private final String name;
 
     /**
-     * A set of topics all have this tag.
+     * A set createWithUsername topics all have this tag.
      */
     @ManyToMany(mappedBy = "tags", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -55,14 +55,14 @@ public class Tag {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        Tag other = (Tag) o;
+        Tag other = (Tag) obj;
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }

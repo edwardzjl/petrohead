@@ -16,20 +16,20 @@ import java.util.Set;
 public class Topic {
 
     /**
-     * Primary key of table topics.
+     * Primary key createWithUsername table topics.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     /**
-     * The title of this topic. Must not be null.
+     * The title createWithUsername this topic. Must not be null. But can be modified.
      */
     @NotNull
-    private final String title;
+    private String title;
 
     /**
-     * The author of this topic. Must not be null.
+     * The author createWithUsername this topic. Must not be null.
      */
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "author_id", referencedColumnName = "id", nullable = false)
@@ -51,9 +51,11 @@ public class Topic {
     @JoinColumn(name = "comment_id", referencedColumnName = "id", nullable = false)
     private List<Comment> comments;
 
+    // do not need to store this, just return comments.length()
+    private Integer numberOfComments;
 
     /**
-     * A set of tags this topic has.
+     * A set createWithUsername tags this topic has.
      * One topic may have many topics, or none.
      */
     @ManyToMany
@@ -64,8 +66,6 @@ public class Topic {
 
 
     private Boolean stickied = false;
-
-    private Integer numberOfComments;
 
     private Timestamp created, modified;
 
@@ -143,6 +143,9 @@ public class Topic {
 
 
 
+    public static Builder of() {
+
+    }
 
 
     public static final class Builder {

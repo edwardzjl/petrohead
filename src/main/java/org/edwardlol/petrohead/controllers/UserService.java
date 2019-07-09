@@ -42,12 +42,11 @@ public class UserService {
     @PostMapping(path = "/newInstance")
     public ResponseEntity<User> addNewUser(@Valid @RequestBody User user) {
 
-        User newUser = User.create(user.getUsername());
-
+        User newUser = User.createWithUsername(user.getUsername()).build();
         newUser.setEmailAddress(user.getEmailAddress());
 
-        Profile profile = new Profile(newUser, user.getProfile().getGender());
-        user.setProfile(profile);
+        Profile profile = Profile.of(newUser).gender(user.getProfile().getGender()).build();
+        newUser.setProfile(profile);
 
         newUser = userRepository.save(newUser);
         return new ResponseEntity<>(newUser, HttpStatus.OK);
@@ -62,7 +61,7 @@ public class UserService {
             return new ResponseEntity<>("This user does not exists.", HttpStatus.NOT_FOUND);
         }
 
-        // TODO: 2019/7/3 update logic deal with empty atttributes
+        // TODO: 2019/7/3 update logic deal birthday empty atttributes
 
         userInDB = userRepository.save(userInDB);
         return new ResponseEntity<>("The user has been updated.", HttpStatus.OK);

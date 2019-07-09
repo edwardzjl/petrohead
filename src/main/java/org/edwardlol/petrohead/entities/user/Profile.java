@@ -9,7 +9,7 @@ import java.util.Date;
 
 /**
  *
- * The {@code Profile} class contains optional information of a {@code User}.
+ * The {@code Profile} class contains optional information createWithUsername a {@code User}.
  *
  * @author  Junlin Chow
  * @since   0.0.1
@@ -19,7 +19,7 @@ import java.util.Date;
 public class Profile {
 
     /**
-     * Primary key of table profiles.
+     * Primary key createWithUsername table profiles.
      */
     @Id
     private Long id;
@@ -42,7 +42,6 @@ public class Profile {
     @Temporal(TemporalType.DATE)
     private Date birthday;
 
-
     private String description;
 
     private Integer points;
@@ -50,7 +49,9 @@ public class Profile {
     private Rank rank;
 
 
-
+    /**
+     * Private constructor, use {@code Builder} to create an instance.
+     */
     private Profile(Builder builder) {
         this.user = builder.user;
         this.gender = builder.gender;
@@ -59,6 +60,10 @@ public class Profile {
         this.points = builder.points;
         this.rank = builder.rank;
     }
+
+
+    //----------- getter / setters -----------
+
 
     public Long getId() {
         return this.id;
@@ -71,7 +76,6 @@ public class Profile {
     public Gender getGender() {
         return this.gender;
     }
-
     public void setGender(Gender gender) {
         this.gender = gender;
     }
@@ -79,19 +83,41 @@ public class Profile {
     public Date getBirthday() {
         return this.birthday;
     }
-
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 
+    public String getDescription() {
+        return this.description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
+    public Integer getPoints() {
+        return this.points;
+    }
+    public void setPoints(Integer points) {
+        this.points = points;
+    }
+
+    public Rank getRank() {
+        return this.rank;
+    }
+    public void setRank(Rank rank) {
+        this.rank = rank;
+    }
+
+
+    //----------- object methods -----------
 
 
     @Override
     public String toString() {
-        return "Profile of " + this.user.toString();
+        return "Profile createWithUsername " + this.user.toString();
     }
 
+    // TODO: 2019-07-08 finish these two methods.
     @Override
     public boolean equals(Object obj) {
         return super.equals(obj);
@@ -103,13 +129,12 @@ public class Profile {
     }
 
 
+    //----------- builder -----------
 
 
     public static Builder of(User user) {
         return new Builder(user);
     }
-
-    // TODO: 2019-07-02 add a builder class
 
 
     public static class Builder {
@@ -125,27 +150,27 @@ public class Profile {
             this.user = user;
         }
 
-        public Builder with(Gender gender) {
+        public Builder gender(Gender gender) {
             this.gender = gender;
             return this;
         }
 
-        public Builder with(Date birthday) {
+        public Builder birthday(Date birthday) {
             this.birthday = birthday;
             return this;
         }
 
-        public Builder with(String description) {
+        public Builder description(String description) {
             this.description = description;
             return this;
         }
 
-        public Builder with(Integer points) {
+        public Builder points(Integer points) {
             this.points = points;
             return this;
         }
 
-        public Builder with(Rank rank) {
+        public Builder rank(Rank rank) {
             this.rank = rank;
             return this;
         }
