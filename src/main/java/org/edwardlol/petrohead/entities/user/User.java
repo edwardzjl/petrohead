@@ -74,6 +74,8 @@ public class User {
     }
 
 
+    //----------- getter / setters -----------
+
 
     public Long getId() {
         return this.id;
@@ -82,7 +84,6 @@ public class User {
     public String getUsername() {
         return this.username;
     }
-    
     public void setUsername(String username) {
         // TODO: 2019-07-08 check last modified time
         this.username = username;
@@ -103,7 +104,6 @@ public class User {
     public String getEmailAddress() {
         return this.emailAddress;
     }
-
     public void setEmailAddress(String emailAddress) throws IllegalArgumentException {
         if (EmailValidator.getInstance().isValid(emailAddress)) {
             this.emailAddress = emailAddress;
@@ -115,10 +115,12 @@ public class User {
     public Profile getProfile() {
         return this.profile;
     }
-
     public void setProfile(Profile profile) {
         this.profile = profile;
     }
+
+
+    //----------- object methods -----------
 
 
     @Override
@@ -147,6 +149,7 @@ public class User {
     }
 
 
+    //----------- builder -----------
 
 
     public static Builder createWithUsername(String username) {
@@ -164,15 +167,15 @@ public class User {
         private Builder(String username) {
             this.username = username;
             this.createTime = LocalDateTime.now();
-            this.usernameLastModifiedTime = LocalDateTime.now();
+            this.usernameLastModifiedTime = this.createTime;
         }
 
-        public Builder withPasswordHash(String passwordHash) {
+        public Builder passwordHash(String passwordHash) {
             this.passwordHash = passwordHash;
             return this;
         }
 
-        public Builder withEmail(String emailAddress) {
+        public Builder email(String emailAddress) {
             this.emailAddress = emailAddress;
             return this;
         }
