@@ -1,6 +1,7 @@
 package org.edwardlol.petrohead.entities.topic;
 
 
+import com.google.common.base.Preconditions;
 import org.edwardlol.petrohead.entities.user.User;
 
 import javax.persistence.*;
@@ -9,7 +10,10 @@ import java.time.Instant;
 
 
 /**
+ * Comment of a {@code Topic}
  *
+ * @author Junlin Chow
+ * @since 0.0.1
  */
 @Entity
 @Table(name = "comments")
@@ -26,19 +30,31 @@ public class Comment {
     @NotNull
     private final User author;
 
-    private String content;
-
     private final Instant createTime;
+
+    private String content;
 
     private Instant lastModifiedTime;
 
-    private Boolean isAnonymous;
+    private Boolean anonymous;
 
     //----------- constructors -----------
 
-    public Comment(User author) {
-        this.author = author;
-        this.createTime = Instant.now();
+    private Comment(Builder builder) {
+        this.author = builder.author;
+        this.createTime = builder.createTime;
+        this.content = builder.content;
+        this.lastModifiedTime = this.createTime;
+        this.anonymous = builder.anonymous;
+    }
+
+    //----------- getter / setters -----------
+
+    private static void checkContent(String content) {
+        // TODO: 2019-07-10  check comment length, and maybe other constrains
+        if (false) {
+            throw new IllegalArgumentException("Comment must be at least xxx words.");
+        }
     }
 
     //----------- getter / setters -----------
@@ -56,7 +72,7 @@ public class Comment {
     }
 
     public void setContent(String content) {
-        // TODO: 2019-07-09 some constraints
+        checkContent(content);
         this.content = content;
         setLastModifiedTime(Instant.now());
     }
@@ -73,12 +89,12 @@ public class Comment {
         this.lastModifiedTime = lastModifiedTime;
     }
 
-    public Boolean getIsAnonymous() {
-        return this.isAnonymous;
+    public Boolean getAnonymous() {
+        return this.anonymous;
     }
 
-    public void setIsAnonymous(Boolean isAnonymous) {
-        this.isAnonymous = isAnonymous;
+    public void setAnonymous(Boolean anonymous) {
+        this.anonymous = anonymous;
         setLastModifiedTime(Instant.now());
     }
 
@@ -103,4 +119,36 @@ public class Comment {
         return 31;
     }
 
+    //----------- builder -----------
+
+    public static Builder createWithAuthor(User author) {
+        return new Builder(author);
+    }
+
+    public static class Builder {
+        private final User author;
+        private final Instant createTime;
+        private String content = "";
+        private Boolean anonymous = false;
+
+        private Builder(User author) {
+            this.author = author;
+            this.createTime = Instant.now();
+        }
+
+        public Builder content(String content) {
+            checkContent(content);
+            this.content = content;
+            return this;
+        }
+
+        public Builder anonymous(Boolean anonymous) {
+            this.anonymous = anonymous;
+            return this;
+        }
+
+        public Comment build() {
+            return new Comment(this);
+        }
+    }
 }

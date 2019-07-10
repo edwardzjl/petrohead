@@ -6,12 +6,16 @@ import org.springframework.data.annotation.PersistenceConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
-//import java.util.Date;
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
+/**
+ *
+ *
+ * @author Junlin Chow
+ * @since 0.0.1
+ */
 @Entity
 @Table(name = "topics")
 public class Topic {
@@ -143,7 +147,6 @@ public class Topic {
     public int hashCode() {
         return this.id.hashCode();
     }
-
 
 
 //    public static Builder of() {

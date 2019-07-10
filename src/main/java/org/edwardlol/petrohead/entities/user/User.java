@@ -82,7 +82,7 @@ public class User {
     private User(Builder builder) {
         this.username = builder.username;
         this.createTime = builder.createTime;
-        this.usernameLastModifiedTime = builder.usernameLastModifiedTime;
+        this.usernameLastModifiedTime = this.createTime;
         this.passwordHash = builder.passwordHash;
         this.emailAddress = builder.emailAddress;
     }
@@ -187,14 +187,12 @@ public class User {
         // TODO: 2019-07-09 build a profile here?
         private final String username;
         private final Instant createTime;
-        private Instant usernameLastModifiedTime;
         private String passwordHash;
         private String emailAddress;
 
         private Builder(String username) {
             this.username = username;
             this.createTime = Instant.now();
-            this.usernameLastModifiedTime = this.createTime;
         }
 
         public Builder passwordHash(String passwordHash) {

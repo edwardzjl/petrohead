@@ -1,5 +1,12 @@
 package org.edwardlol.petrohead.entities.user;
 
+
+/**
+ * Rank of a {@code User}, inspired by Ranking system of World of Warcraft.
+ *
+ * @author Junlin Chow
+ * @since 0.0.1
+ */
 public enum Rank {
     Private,
     Corporal,
@@ -15,4 +22,4 @@ public enum Rank {
     Marshal,
     FieldMarshal,
     GrandMarshal
-    }
+}

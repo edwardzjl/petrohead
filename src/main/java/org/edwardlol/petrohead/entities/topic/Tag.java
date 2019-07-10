@@ -43,7 +43,7 @@ public class Tag {
         this.topics = new HashSet<>();
     }
 
-    public static Tag newInstance(String name) {
+    public static Tag createWithName(String name) {
         return new Tag(name);
     }
 

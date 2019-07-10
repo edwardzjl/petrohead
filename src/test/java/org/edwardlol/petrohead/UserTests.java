@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,7 +39,7 @@ public class UserTests {
         User judy = User.createWithUsername("Judy").build();
         Profile judyProfile = Profile.of(judy)
                 .gender(Gender.Female)
-                .birthday(new SimpleDateFormat("MM/dd/yyyy").parse(("4/12/2010")))
+                .birthday(LocalDate.parse("2010-4-12"))
                 .build();
 
         judy.setProfile(judyProfile);
@@ -56,7 +57,7 @@ public class UserTests {
         User judy = User.createWithUsername("Judy").build();
         Profile judyProfile = Profile.of(judy)
                 .gender(Gender.Female)
-                .birthday(new SimpleDateFormat("MM/dd/yyyy").parse(("4/12/2010")))
+                .birthday(LocalDate.parse("2010-4-12"))
                 .build();
         judy.setProfile(judyProfile);
 
