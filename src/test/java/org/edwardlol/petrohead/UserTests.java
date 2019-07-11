@@ -15,7 +15,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class UserTests {
 
     @Test
     public void createUser() throws ParseException {
-        User judy = User.createWithUsername("Judy").build();
+        User judy = User.newBuider().username("Judy").build();
         Profile judyProfile = Profile.of(judy)
                 .gender(Gender.Female)
                 .birthday(LocalDate.parse("2010-4-12"))
@@ -54,7 +53,7 @@ public class UserTests {
     @Test
     public void whenFindByName_thenReturnEmployee() throws ParseException {
         // given
-        User judy = User.createWithUsername("Judy").build();
+        User judy = User.newBuider().username("judy").build();
         Profile judyProfile = Profile.of(judy)
                 .gender(Gender.Female)
                 .birthday(LocalDate.parse("2010-4-12"))

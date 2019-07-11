@@ -157,6 +157,56 @@ public class User {
         this.profile = profile;
     }
 
+    //----------- cascade getter / setters from Profile -----------
+
+    public String getAvatar() {
+        return this.profile.getAvatar();
+    }
+
+    public void setAvatar(String avatar) {
+        this.profile.setAvatar(avatar);
+    }
+
+    public Optional<Gender> getGender() {
+        return this.profile.getGender();
+    }
+
+    public void setGender(Gender gender) {
+        this.profile.setGender(gender);
+    }
+
+    public Optional<LocalDate> getBirthday() {
+        return this.profile.getBirthday();
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.profile.setBirthday(birthday);
+    }
+
+    public String getDescription() {
+        return this.profile.getDescription();
+    }
+
+    public void setDescription(String description) {
+        this.profile.setDescription(description);
+    }
+
+    public Integer getPoints() {
+        return this.profile.getPoints();
+    }
+
+    public void setPoints(Integer points) {
+        this.profile.setPoints(points);
+    }
+
+    public Rank getRank() {
+        return this.profile.getRank();
+    }
+
+    public void setRank(Rank rank) {
+        this.profile.setRank(rank);
+    }
+
     //----------- object methods -----------
 
     @Override
@@ -180,20 +230,35 @@ public class User {
 
     //----------- builder -----------
 
-    public static Builder createWithUsername(String username) {
-        return new Builder(username);
+    public interface Username {
+        Builder username(String username);
     }
 
-    public static final class Builder {
-        // TODO: 2019-07-09 build a profile here?
-        private final String username;
-        private final Instant createTime;
+    public static Username newBuider() {
+        return new Builder();
+    }
+
+    public static final class Builder implements Username {
+        // mandatory
+        private String username;
+        private Instant createTime;
+
+        // optional
         private String passwordHash;
         private String emailAddress;
 
-        private Builder(String username) {
+        private String avatar;
+        private Gender gender;
+        private LocalDate birthday;
+        private String description = "";
+        private Integer points = 0;
+        private Rank rank = Rank.Private;
+
+
+        @Override
+        public Builder username(String username) {
             this.username = username;
-            this.createTime = Instant.now();
+            return this;
         }
 
         public Builder passwordHash(String passwordHash) {
@@ -206,8 +271,49 @@ public class User {
             return this;
         }
 
+        public Builder avatar(String avatar) {
+            this.avatar = avatar;
+            return this;
+        }
+
+        public Builder gender(Gender gender) {
+            this.gender = gender;
+            return this;
+        }
+
+        public Builder birthday(LocalDate birthday) {
+            this.birthday = birthday;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder points(Integer points) {
+            this.points = points;
+            return this;
+        }
+
+        public Builder rank(Rank rank) {
+            this.rank = rank;
+            return this;
+        }
+
+
         public User build() {
-            return new User(this);
+            User user = new User(this);
+            Profile profile = Profile.of(user)
+                    .avatar(this.avatar)
+                    .gender(this.gender)
+                    .birthday(this.birthday)
+                    .description(this.description)
+                    .points(this.points)
+                    .rank(this.rank)
+                    .build();
+            user.setProfile(profile);
+            return user;
         }
     }
 

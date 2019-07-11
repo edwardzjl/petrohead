@@ -126,7 +126,7 @@ public class Comment {
         return new Builder(author);
     }
 
-    public static final class Builder {
+    public static final class Builder implements Author, Content {
         private final User author;
         private final Instant createTime;
         private String content = "";
@@ -137,11 +137,26 @@ public class Comment {
             this.createTime = Instant.now();
         }
 
-        public Builder content(String content) {
-            checkContent(content);
-            this.content = content;
+        /**
+         * Mandatory, must be followed by {@link Author#author(User)}
+         */
+        @Override
+        public Content author(User author) {
             return this;
         }
+
+        /**
+         *
+         */
+        @Override
+        public Builder content(String content) {
+            return this;
+        }
+        //        public Builder content(String content) {
+//            checkContent(content);
+//            this.content = content;
+//            return this;
+//        }
 
         public Builder anonymous(Boolean anonymous) {
             this.anonymous = anonymous;
@@ -152,4 +167,14 @@ public class Comment {
             return new Comment(this);
         }
     }
+
+    interface Author {
+        public Content author(User author);
+    }
+
+    interface Content {
+        public Builder content(String content);
+    }
+
+
 }

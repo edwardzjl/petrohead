@@ -42,11 +42,11 @@ public class UserService {
     @PostMapping(path = "/newInstance")
     public ResponseEntity<User> addNewUser(@Valid @RequestBody User user) {
 
-        User newUser = User.createWithUsername(user.getUsername()).build();
+        User newUser = User.newBuider()
+                .username(user.getUsername())
+                .gender(user.getProfile().getGender().orElse(null))
+                .build();
         newUser.setEmailAddress(user.getEmailAddress().orElse(null));
-
-        Profile profile = Profile.of(newUser).gender(user.getProfile().getGender().orElse(null)).build();
-        newUser.setProfile(profile);
 
         newUser = userRepository.save(newUser);
         return new ResponseEntity<>(newUser, HttpStatus.OK);

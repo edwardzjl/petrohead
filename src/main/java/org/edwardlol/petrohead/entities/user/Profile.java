@@ -38,11 +38,9 @@ public class Profile {
 
     private String avatar;
 
-    private String introduction;
-
     private Gender gender;
 
-//    @Temporal(TemporalType.DATE)
+    //    @Temporal(TemporalType.DATE)
     private LocalDate birthday;
 
     private String description;
@@ -56,7 +54,6 @@ public class Profile {
     private Profile(Builder builder) {
         this.user = builder.user;
         this.avatar = builder.avatar;
-        this.introduction = builder.introduction;
         this.gender = builder.gender;
         this.birthday = builder.birthday;
         this.description = builder.description;
@@ -81,14 +78,6 @@ public class Profile {
     public void setAvatar(String avatar) {
         // TODO: 2019-07-09 check avatar url
         this.avatar = avatar;
-    }
-
-    public String getIntroduction() {
-        return this.introduction;
-    }
-
-    public void setIntroduction(String introduction) {
-        this.introduction = introduction;
     }
 
     public Optional<Gender> getGender() {
@@ -171,7 +160,6 @@ public class Profile {
 
         private final User user;
         private String avatar;
-        private String introduction = "";
         private Gender gender;
         private LocalDate birthday;
         private String description = "";
@@ -184,11 +172,6 @@ public class Profile {
 
         public Builder avatar(String avatar) {
             this.avatar = avatar;
-            return this;
-        }
-
-        public Builder introduction(String introduction) {
-            this.introduction = introduction;
             return this;
         }
 
