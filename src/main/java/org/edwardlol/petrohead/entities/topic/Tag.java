@@ -3,6 +3,7 @@ package org.edwardlol.petrohead.entities.topic;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,7 +27,7 @@ public class Tag {
     private Long id;
 
     @Column(unique = true)
-    @NotNull
+    @NotBlank(message = "Tag name cannot be blank")
     private final String name;
 
     /**

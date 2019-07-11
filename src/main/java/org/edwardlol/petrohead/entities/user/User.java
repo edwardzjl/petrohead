@@ -5,6 +5,7 @@ import com.google.common.base.Preconditions;
 import org.apache.commons.validator.routines.EmailValidator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.*;
 import java.util.Optional;
@@ -45,7 +46,7 @@ public class User {
      * The username createWithUsername this user. Must not be null, but can be modified.
      */
     @Column(unique = true)
-    @NotNull
+    @NotBlank(message = "username cannot be blank")
     private String username;
 
     /**
@@ -57,12 +58,12 @@ public class User {
     /**
      * Last time this user changed his username.
      */
+//    @Temporal(TemporalType.TIMESTAMP)
     @NotNull
-    @Temporal(TemporalType.TIMESTAMP)
     private Instant usernameLastModifiedTime;
 
     // TODO: 2019-07-02 dive into security service before do anything here.
-    @NotNull
+    @NotBlank
     private String passwordHash;
 
     @Column(unique = true)
@@ -183,7 +184,7 @@ public class User {
         return new Builder(username);
     }
 
-    public static class Builder {
+    public static final class Builder {
         // TODO: 2019-07-09 build a profile here?
         private final String username;
         private final Instant createTime;

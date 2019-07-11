@@ -1,24 +1,22 @@
 package org.edwardlol.petrohead.entities.topic;
 
 import org.edwardlol.petrohead.entities.user.User;
-import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
- *
- *
  * @author Junlin Chow
  * @since 0.0.1
  */
 @Entity
 @Table(name = "topics")
 public class Topic {
+
+    //----------- instance fields -----------
 
     /**
      * Primary key createWithUsername table topics.
@@ -30,7 +28,7 @@ public class Topic {
     /**
      * The title createWithUsername this topic. Must not be null. But can be modified.
      */
-    @NotNull
+    @NotBlank(message = "Topic title cannot be blank")
     private String title;
 
     /**
@@ -44,22 +42,22 @@ public class Topic {
     /**
      *
      */
+    @NotBlank(message = "Topic content cannot be blank")
     private String content;
 
-    @Temporal(TemporalType.TIMESTAMP)
+//    @Temporal(TemporalType.TIMESTAMP)
+    @NotNull
     private Instant createTime;
 
-    @Temporal(TemporalType.TIMESTAMP)
+//    @Temporal(TemporalType.TIMESTAMP)
+    @NotNull
     private Instant lastModifiedTime;
 
-    private Integer view;
+    private Integer views;
 
     @ManyToOne(targetEntity = Comment.class)
     @JoinColumn(name = "comment_id", referencedColumnName = "id", nullable = false)
     private List<Comment> comments;
-
-    // do not need to store this, just return comments.length()
-    private Integer numberOfComments;
 
     /**
      * A set createWithUsername tags this topic has.
@@ -71,20 +69,27 @@ public class Topic {
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
     private Set<Tag> tags; // optional
 
+    private Boolean stickied;
 
-    private Boolean stickied = false;
+    //----------- constructors -----------
 
-    private Timestamp created, modified;
-
-    @PersistenceConstructor
+    //    @PersistenceConstructor
     private Topic(String title, User author) {
         this.title = title;
         this.author = author;
     }
 
-//    private Topic(Builder builder) {
-//
-//    }
+    private Topic(Builder builder) {
+        this.title = builder.title;
+        this.author = builder.author;
+        this.content = builder.content;
+        this.createTime = Instant.now();
+        this.lastModifiedTime = this.createTime;
+        this.views = 0;
+        this.comments = new ArrayList<>();
+        this.tags = new HashSet<>();
+        this.stickied = builder.stickied;
+    }
 
     // TODO: 2019-07-02 should it be a builder?
     public static Topic newInstance(String title, User author) {
@@ -101,6 +106,11 @@ public class Topic {
         return this.title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+        this.lastModifiedTime = Instant.now();
+    }
+
     public User getAuthor() {
         return this.author;
     }
@@ -108,13 +118,30 @@ public class Topic {
     public String getContent() {
         return this.content;
     }
-
+    public void setContent(String content) {
+        this.content = content;
+        this.lastModifiedTime = Instant.now();
+    }
     public List<Comment> getComments() {
         return this.comments;
     }
 
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+        this.lastModifiedTime = Instant.now();
+    }
+
     public Set<Tag> getTags() {
         return this.tags;
+    }
+
+    public void addTag(Tag tag) {
+        this.tags.add(tag);
+        this.lastModifiedTime = Instant.now();
+    }
+    public void addTags(Collection<Tag> tags) {
+        this.tags.addAll(tags);
+        this.lastModifiedTime = Instant.now();
     }
 
     public Boolean getStickied() {
@@ -123,8 +150,10 @@ public class Topic {
 
     public void setStikied(Boolean stickied) {
         this.stickied = stickied;
+        this.lastModifiedTime = Instant.now();
     }
 
+    //----------- object methods -----------
 
     @Override
     public String toString() {
@@ -132,58 +161,51 @@ public class Topic {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Topic other = (Topic) o;
-        return this.id.equals(other.id);
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Topic)) return false;
+
+        Topic other = (Topic) obj;
+        return this.id != null && this.id.equals(other.getId());
     }
 
     @Override
     public int hashCode() {
-        return this.id.hashCode();
+        return 31;
     }
 
+    //----------- builder -----------
 
-//    public static Builder of() {
-//
-//    }
-
+    public static Builder withTitleAndAuthor(String title, User author) {
+        return new Builder(title, author);
+    }
 
     public static final class Builder {
-        final String title;
-        User author;
-        String content;
+        private final String title;
+        private final User author;
+        private String content = "";
+        private Boolean stickied = false;
 
-        private Builder(String title) {
+        // TODO: 2019-07-10 can I improve this?
+        Builder(String title, User author) {
             this.title = title;
-        }
-
-        public Builder author(User author) {
             this.author = author;
+        }
+
+        public Builder content() {
+            this.content = content;
             return this;
+        }
+
+        public Builder stickied(Boolean stickied) {
+            this.stickied = stickied;
+            return this;
+        }
+
+        public Topic build() {
+            return new Topic(this);
         }
     }
 
-    public static final class Builder2 {
-        final Builder builder;
-
-        Builder2(Builder builder) {
-            this.builder = builder;
-        }
-
-        Builder2 content(String content) {
-            this.builder.content = content;
-            return this;
-        }
-//
-//        public Topic build() {
-//            return new Topic(this.builder);
-//        }
-    }
 
 }

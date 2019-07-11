@@ -1,10 +1,10 @@
 package org.edwardlol.petrohead.entities.topic;
 
 
-import com.google.common.base.Preconditions;
 import org.edwardlol.petrohead.entities.user.User;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
@@ -32,6 +32,7 @@ public class Comment {
 
     private final Instant createTime;
 
+    @NotBlank(message = "Comment content cannot be blank")
     private String content;
 
     private Instant lastModifiedTime;
@@ -125,7 +126,7 @@ public class Comment {
         return new Builder(author);
     }
 
-    public static class Builder {
+    public static final class Builder {
         private final User author;
         private final Instant createTime;
         private String content = "";

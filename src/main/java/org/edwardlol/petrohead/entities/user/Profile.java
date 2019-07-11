@@ -42,7 +42,7 @@ public class Profile {
 
     private Gender gender;
 
-    @Temporal(TemporalType.DATE)
+//    @Temporal(TemporalType.DATE)
     private LocalDate birthday;
 
     private String description;
@@ -167,7 +167,7 @@ public class Profile {
         return new Builder(user);
     }
 
-    public static class Builder {
+    public static final class Builder {
 
         private final User user;
         private String avatar;

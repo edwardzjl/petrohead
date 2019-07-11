@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import java.time.*;
 
-public class UtilTests {
+public class TimeTests {
 
 
     @Test
