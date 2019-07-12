@@ -53,17 +53,15 @@ public class User {
      * When this user is created.
      */
     @NotNull
-    private final Instant createTime;
+    private Instant createTime;
 
     /**
      * Last time this user changed his username.
      */
-//    @Temporal(TemporalType.TIMESTAMP)
     @NotNull
     private Instant usernameLastModifiedTime;
 
     // TODO: 2019-07-02 dive into security service before do anything here.
-    @NotBlank
     private String passwordHash;
 
     @Column(unique = true)
@@ -79,6 +77,9 @@ public class User {
     private Profile profile;
 
     //----------- constructors -----------
+
+    protected User() {
+    }
 
     private User(Builder builder) {
         this.username = builder.username;
@@ -99,18 +100,20 @@ public class User {
     }
 
     public void setUsername(String username) {
-        Preconditions.checkArgument(this.profile.getPoints() > CHANGE_NAME_POINTS,
-                "You don't have enough points!");
-
-        Instant now = Instant.now();
-        LocalDate start = LocalDateTime.ofInstant(now, ZoneId.systemDefault()).toLocalDate();
-        LocalDate end = LocalDateTime.ofInstant(this.usernameLastModifiedTime, ZoneId.systemDefault()).toLocalDate();
-
-        Preconditions.checkArgument(Period.between(start, end).getMonths() > CHANGE_NAME_PERIOD_MONTHS,
-                "You can only change your ");
+//        Preconditions.checkArgument(
+//                this.profile.getPoints() > CHANGE_NAME_POINTS,
+//                "You don't have enough points!");
+//
+//        Instant now = Instant.now();
+//        LocalDate start = LocalDateTime.ofInstant(now, ZoneId.systemDefault()).toLocalDate();
+//        LocalDate end = LocalDateTime.ofInstant(getUsernameLastModifiedTime(), ZoneId.systemDefault()).toLocalDate();
+//
+//        Preconditions.checkArgument(
+//                Period.between(start, end).getMonths() > CHANGE_NAME_PERIOD_MONTHS,
+//                "You can only change your username every " + CHANGE_NAME_PERIOD_MONTHS + " months!");
 
         this.username = username;
-        setUsernameLastModifiedTime(now);
+//        setUsernameLastModifiedTime(now);
     }
 
     public Instant getCreateTime() {
@@ -157,56 +160,6 @@ public class User {
         this.profile = profile;
     }
 
-    //----------- cascade getter / setters from Profile -----------
-
-    public String getAvatar() {
-        return this.profile.getAvatar();
-    }
-
-    public void setAvatar(String avatar) {
-        this.profile.setAvatar(avatar);
-    }
-
-    public Optional<Gender> getGender() {
-        return this.profile.getGender();
-    }
-
-    public void setGender(Gender gender) {
-        this.profile.setGender(gender);
-    }
-
-    public Optional<LocalDate> getBirthday() {
-        return this.profile.getBirthday();
-    }
-
-    public void setBirthday(LocalDate birthday) {
-        this.profile.setBirthday(birthday);
-    }
-
-    public String getDescription() {
-        return this.profile.getDescription();
-    }
-
-    public void setDescription(String description) {
-        this.profile.setDescription(description);
-    }
-
-    public Integer getPoints() {
-        return this.profile.getPoints();
-    }
-
-    public void setPoints(Integer points) {
-        this.profile.setPoints(points);
-    }
-
-    public Rank getRank() {
-        return this.profile.getRank();
-    }
-
-    public void setRank(Rank rank) {
-        this.profile.setRank(rank);
-    }
-
     //----------- object methods -----------
 
     @Override
@@ -234,7 +187,7 @@ public class User {
         Builder username(String username);
     }
 
-    public static Username newBuider() {
+    public static Username buider() {
         return new Builder();
     }
 
@@ -242,11 +195,10 @@ public class User {
         // mandatory
         private String username;
         private Instant createTime;
-
         // optional
         private String passwordHash;
         private String emailAddress;
-
+        // profile
         private String avatar;
         private Gender gender;
         private LocalDate birthday;
@@ -258,6 +210,7 @@ public class User {
         @Override
         public Builder username(String username) {
             this.username = username;
+            this.createTime = Instant.now();
             return this;
         }
 

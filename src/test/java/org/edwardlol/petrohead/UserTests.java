@@ -35,7 +35,7 @@ public class UserTests {
 
     @Test
     public void createUser() throws ParseException {
-        User judy = User.newBuider().username("Judy").build();
+        User judy = User.buider().username("Judy1").build();
         Profile judyProfile = Profile.of(judy)
                 .gender(Gender.Female)
                 .birthday(LocalDate.parse("2010-4-12"))
@@ -51,9 +51,9 @@ public class UserTests {
 
 
     @Test
-    public void whenFindByName_thenReturnEmployee() throws ParseException {
+    public void whenFindByName_thenReturnEmployee() {
         // given
-        User judy = User.newBuider().username("judy").build();
+        User judy = User.buider().username("judy1").build();
         Profile judyProfile = Profile.of(judy)
                 .gender(Gender.Female)
                 .birthday(LocalDate.parse("2010-4-12"))

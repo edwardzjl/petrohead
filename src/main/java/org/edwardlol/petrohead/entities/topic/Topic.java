@@ -1,6 +1,7 @@
 package org.edwardlol.petrohead.entities.topic;
 
 import org.edwardlol.petrohead.entities.user.User;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -73,7 +74,7 @@ public class Topic {
 
     //----------- constructors -----------
 
-    //    @PersistenceConstructor
+    @PersistenceConstructor
     private Topic(String title, User author) {
         this.title = title;
         this.author = author;

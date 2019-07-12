@@ -34,7 +34,7 @@ public class Profile {
     @MapsId
     @JsonIgnore
     @NotNull
-    private final User user;
+    private User user;
 
     private String avatar;
 
@@ -50,6 +50,9 @@ public class Profile {
     private Rank rank;
 
     //----------- constructors -----------
+
+    protected Profile() {
+    }
 
     private Profile(Builder builder) {
         this.user = builder.user;
@@ -133,7 +136,7 @@ public class Profile {
 
     @Override
     public String toString() {
-        return "Profile createWithUsername " + this.user.toString();
+        return "Profile of user " + this.user.toString();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package org.edwardlol.petrohead;
 
-import com.sun.tools.javac.jvm.Gen;
 import org.edwardlol.petrohead.entities.user.Gender;
 import org.edwardlol.petrohead.entities.user.Rank;
 import org.edwardlol.petrohead.entities.user.User;
@@ -11,10 +10,14 @@ import java.time.LocalDate;
 public class BuilderTests {
 
 
+    @Test
+    public void printBuilderType() {
+        System.out.println(User.buider().getClass().getSimpleName());
+    }
 
     @Test
     public void UserBuilderTest() {
-        User jude = User.newBuider()
+        User jude = User.buider()
                 .username("jude")
                 .gender(Gender.Female)
                 .description("haha")
@@ -25,7 +28,7 @@ public class BuilderTests {
 
     @Test
     public void UserBuilderFullParamTest() {
-        User james = User.newBuider()
+        User james = User.buider()
                 .username("james")
                 .gender(Gender.Male)
                 .passwordHash("test")

@@ -23,7 +23,7 @@ public class TopicService {
     public ResponseEntity<?> getTopic(@RequestParam(value = "title") String title) {
         Topic topic = topicRepository.findByTitle(title);
         if (topic == null) {
-            return new ResponseEntity<>("There isn't a topic birthday title: " + title, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("There isn't a topic with title: " + title, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(topic, HttpStatus.OK);
     }

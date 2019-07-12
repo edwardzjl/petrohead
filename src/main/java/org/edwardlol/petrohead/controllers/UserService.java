@@ -1,7 +1,6 @@
 package org.edwardlol.petrohead.controllers;
 
 
-import org.edwardlol.petrohead.entities.user.Profile;
 import org.edwardlol.petrohead.entities.user.User;
 import org.edwardlol.petrohead.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,15 @@ public class UserService {
 
     //---------- Retrieve Users ----------------
 
+    @GetMapping(path = "/get")
+    public ResponseEntity<?> getUserByUsername(@RequestParam(value = "username") String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            return new ResponseEntity<>("There isn't a user with username: " + username, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
     @GetMapping(path = "/all")
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -32,17 +40,13 @@ public class UserService {
     // TODO: 2019-07-02 check this
 
     /**
-     *
-     * must newInstance a new user
+     * must create a new user
      * or return 500 error "attempted to assign id from null one-to-one property"
-     *
-     * @param user
-     * @return
      */
-    @PostMapping(path = "/newInstance")
+    @PostMapping(path = "/create")
     public ResponseEntity<User> addNewUser(@Valid @RequestBody User user) {
-
-        User newUser = User.newBuider()
+//        System.out.println(user.getCreateTime());
+        User newUser = User.buider()
                 .username(user.getUsername())
                 .gender(user.getProfile().getGender().orElse(null))
                 .build();

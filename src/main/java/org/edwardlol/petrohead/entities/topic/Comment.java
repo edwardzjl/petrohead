@@ -2,6 +2,7 @@ package org.edwardlol.petrohead.entities.topic;
 
 
 import org.edwardlol.petrohead.entities.user.User;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -41,6 +42,7 @@ public class Comment {
 
     //----------- constructors -----------
 
+    @PersistenceConstructor
     private Comment(Builder builder) {
         this.author = builder.author;
         this.createTime = builder.createTime;
