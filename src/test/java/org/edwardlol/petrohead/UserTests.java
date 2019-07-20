@@ -1,6 +1,7 @@
 package org.edwardlol.petrohead;
 
 import org.edwardlol.petrohead.controllers.UserService;
+import org.edwardlol.petrohead.controllers.impl.UserServiceImpl;
 import org.edwardlol.petrohead.entities.user.Gender;
 import org.edwardlol.petrohead.entities.user.Profile;
 import org.edwardlol.petrohead.entities.user.User;
@@ -36,16 +37,16 @@ public class UserTests {
     @Test
     public void createUser() throws ParseException {
         User judy = User.buider().username("Judy1").build();
-        Profile judyProfile = Profile.of(judy)
+        Profile judyProfile = Profile.buider().user(judy)
                 .gender(Gender.Female)
-                .birthday(LocalDate.parse("2010-4-12"))
+                .birthday(LocalDate.parse("2010-04-12"))
                 .build();
 
         judy.setProfile(judyProfile);
         judy = userRepository.save(judy);
         userRepository.flush();
 
-        UserService userService = new UserService();
+        UserService userService = new UserServiceImpl();
         List<User> users = userService.getAllUsers();
     }
 
@@ -53,18 +54,17 @@ public class UserTests {
     @Test
     public void whenFindByName_thenReturnEmployee() {
         // given
-        User judy = User.buider().username("judy1").build();
-        Profile judyProfile = Profile.of(judy)
+        User judy = User.buider()
+                .username("judy1")
                 .gender(Gender.Female)
-                .birthday(LocalDate.parse("2010-4-12"))
+                .birthday(LocalDate.parse("2010-04-12"))
                 .build();
-        judy.setProfile(judyProfile);
 
         entityManager.persist(judy);
         entityManager.flush();
 
         // when
-        User found = userRepository.findByUsername(judy.getUsername());
+        User found = userRepository.findByUsername(judy.getUsername()).orElse(null);
 
         // then
         assertThat(found.getUsername()).isEqualTo(judy.getUsername());

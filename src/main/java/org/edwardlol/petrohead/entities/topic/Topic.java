@@ -1,7 +1,6 @@
 package org.edwardlol.petrohead.entities.topic;
 
 import org.edwardlol.petrohead.entities.user.User;
-import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -27,7 +26,7 @@ public class Topic {
     private Long id;
 
     /**
-     * The title createWithUsername this topic. Must not be null. But can be modified.
+     * The title of this topic. Must not be null. But can be modified.
      */
     @NotBlank(message = "Topic title cannot be blank")
     private String title;
@@ -46,12 +45,8 @@ public class Topic {
     @NotBlank(message = "Topic content cannot be blank")
     private String content;
 
-//    @Temporal(TemporalType.TIMESTAMP)
-    @NotNull
     private Instant createTime;
 
-//    @Temporal(TemporalType.TIMESTAMP)
-    @NotNull
     private Instant lastModifiedTime;
 
     private Integer views;
@@ -68,35 +63,25 @@ public class Topic {
     @JoinTable(name = "topic_tag",
             joinColumns = @JoinColumn(name = "topic_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
-    private Set<Tag> tags; // optional
+    private Set<Tag> tags;
 
     private Boolean stickied;
 
     //----------- constructors -----------
 
-    @PersistenceConstructor
-    private Topic(String title, User author) {
-        this.title = title;
-        this.author = author;
-    }
-
     private Topic(Builder builder) {
+        this.createTime = Instant.now();
+        this.lastModifiedTime = this.createTime;
+
         this.title = builder.title;
         this.author = builder.author;
         this.content = builder.content;
-        this.createTime = Instant.now();
-        this.lastModifiedTime = this.createTime;
+        this.stickied = builder.stickied;
+        this.tags = builder.tags;
+
         this.views = 0;
         this.comments = new ArrayList<>();
-        this.tags = new HashSet<>();
-        this.stickied = builder.stickied;
     }
-
-    // TODO: 2019-07-02 should it be a builder?
-    public static Topic newInstance(String title, User author) {
-        return new Topic(title, author);
-    }
-
 
     // TODO: 2019-07-05 make some optional fields' getters return Optional?
     public Long getId() {
@@ -119,10 +104,12 @@ public class Topic {
     public String getContent() {
         return this.content;
     }
+
     public void setContent(String content) {
         this.content = content;
         this.lastModifiedTime = Instant.now();
     }
+
     public List<Comment> getComments() {
         return this.comments;
     }
@@ -136,10 +123,15 @@ public class Topic {
         return this.tags;
     }
 
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
     public void addTag(Tag tag) {
         this.tags.add(tag);
         this.lastModifiedTime = Instant.now();
     }
+
     public void addTags(Collection<Tag> tags) {
         this.tags.addAll(tags);
         this.lastModifiedTime = Instant.now();
@@ -177,24 +169,44 @@ public class Topic {
 
     //----------- builder -----------
 
-    public static Builder withTitleAndAuthor(String title, User author) {
-        return new Builder(title, author);
+    public interface Title {
+        Author title(String title);
     }
 
-    public static final class Builder {
-        private final String title;
-        private final User author;
+    public interface Author {
+        Builder author(User author);
+    }
+
+    public static Title builder() {
+        return new Builder();
+    }
+
+    public static final class Builder implements Title, Author {
+        private String title;
+        private User author;
         private String content = "";
+        private Set<Tag> tags = new HashSet<>();
         private Boolean stickied = false;
 
-        // TODO: 2019-07-10 can I improve this?
-        Builder(String title, User author) {
+        @Override
+        public Author title(String title) {
             this.title = title;
+            return this;
+        }
+
+        @Override
+        public Builder author(User author) {
             this.author = author;
+            return this;
         }
 
         public Builder content() {
             this.content = content;
+            return this;
+        }
+
+        public Builder tags(Set<Tag> tags) {
+            this.tags = tags;
             return this;
         }
 
@@ -207,6 +219,5 @@ public class Topic {
             return new Topic(this);
         }
     }
-
 
 }

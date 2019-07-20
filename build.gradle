@@ -30,6 +30,10 @@ dependencies {
 //	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
+	// https://mvnrepository.com/artifact/org.projectlombok/lombok
+	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
+
+
 	implementation "com.google.guava:guava:28.0-jre"
 
 	implementation "com.auth0:java-jwt:3.8.1"

@@ -6,8 +6,8 @@ import org.apache.commons.validator.routines.EmailValidator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Optional;
 
 /**
@@ -52,13 +52,11 @@ public class User {
     /**
      * When this user is created.
      */
-    @NotNull
     private Instant createTime;
 
     /**
      * Last time this user changed his username.
      */
-    @NotNull
     private Instant usernameLastModifiedTime;
 
     // TODO: 2019-07-02 dive into security service before do anything here.
@@ -82,9 +80,10 @@ public class User {
     }
 
     private User(Builder builder) {
-        this.username = builder.username;
-        this.createTime = builder.createTime;
+        this.createTime = Instant.now();
         this.usernameLastModifiedTime = this.createTime;
+
+        this.username = builder.username;
         this.passwordHash = builder.passwordHash;
         this.emailAddress = builder.emailAddress;
     }
@@ -99,10 +98,11 @@ public class User {
         return this.username;
     }
 
+    // TODO: 2019-07-19 how to check conditions before set username?
     public void setUsername(String username) {
-//        Preconditions.checkArgument(
-//                this.profile.getPoints() > CHANGE_NAME_POINTS,
-//                "You don't have enough points!");
+        Preconditions.checkArgument(
+                this.profile.getPoints() > CHANGE_NAME_POINTS,
+                "You don't have enough points!");
 //
 //        Instant now = Instant.now();
 //        LocalDate start = LocalDateTime.ofInstant(now, ZoneId.systemDefault()).toLocalDate();
@@ -194,7 +194,6 @@ public class User {
     public static final class Builder implements Username {
         // mandatory
         private String username;
-        private Instant createTime;
         // optional
         private String passwordHash;
         private String emailAddress;
@@ -203,14 +202,13 @@ public class User {
         private Gender gender;
         private LocalDate birthday;
         private String description = "";
-        private Integer points = 0;
+        private Integer points = 0; // for setting username the first time
         private Rank rank = Rank.Private;
 
 
         @Override
         public Builder username(String username) {
             this.username = username;
-            this.createTime = Instant.now();
             return this;
         }
 
@@ -254,10 +252,9 @@ public class User {
             return this;
         }
 
-
         public User build() {
             User user = new User(this);
-            Profile profile = Profile.of(user)
+            Profile profile = Profile.buider().user(user)
                     .avatar(this.avatar)
                     .gender(this.gender)
                     .birthday(this.birthday)

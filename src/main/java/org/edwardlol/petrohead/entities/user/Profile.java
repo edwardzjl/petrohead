@@ -40,7 +40,6 @@ public class Profile {
 
     private Gender gender;
 
-    //    @Temporal(TemporalType.DATE)
     private LocalDate birthday;
 
     private String description;
@@ -155,13 +154,17 @@ public class Profile {
 
     //----------- builder -----------
 
-    public static Builder of(User user) {
-        return new Builder(user);
+    public interface ofUser {
+        Builder user(User user);
     }
 
-    public static final class Builder {
+    public static ofUser buider() {
+        return new Builder();
+    }
 
-        private final User user;
+    public static final class Builder implements ofUser {
+
+        private User user;
         private String avatar;
         private Gender gender;
         private LocalDate birthday;
@@ -169,8 +172,10 @@ public class Profile {
         private Integer points = 0;
         private Rank rank = Rank.Private;
 
-        private Builder(User user) {
+        @Override
+        public Builder user(User user) {
             this.user = user;
+            return this;
         }
 
         public Builder avatar(String avatar) {
