@@ -37,7 +37,7 @@ public class Topic {
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "author_id", referencedColumnName = "id", nullable = false)
     @NotNull
-    private final User author;
+    private User author;
 
     /**
      *
@@ -45,7 +45,7 @@ public class Topic {
     @NotBlank(message = "Topic content cannot be blank")
     private String content;
 
-    private Instant createTime;
+    private final Instant createTime;
 
     private Instant lastModifiedTime;
 
@@ -69,10 +69,13 @@ public class Topic {
 
     //----------- constructors -----------
 
-    private Topic(Builder builder) {
+    protected Topic() {
         this.createTime = Instant.now();
         this.lastModifiedTime = this.createTime;
+    }
 
+    private Topic(Builder builder) {
+        this();
         this.title = builder.title;
         this.author = builder.author;
         this.content = builder.content;
@@ -82,6 +85,21 @@ public class Topic {
         this.views = 0;
         this.comments = new ArrayList<>();
     }
+
+    //----------- methods -----------
+
+    private static void checkContent(String content) {
+        // TODO: 2019-07-10  check comment length, and maybe other constrains
+        if (false) {
+            throw new IllegalArgumentException("Comment must be at least xxx words.");
+        }
+    }
+
+    public void view() {
+        this.views++;
+    }
+
+    //----------- getter / setters -----------
 
     // TODO: 2019-07-05 make some optional fields' getters return Optional?
     public Long getId() {
@@ -93,6 +111,7 @@ public class Topic {
     }
 
     public void setTitle(String title) {
+        // TODO: 2019-07-26 check title
         this.title = title;
         this.lastModifiedTime = Instant.now();
     }
@@ -106,8 +125,21 @@ public class Topic {
     }
 
     public void setContent(String content) {
+        checkContent(content);
         this.content = content;
         this.lastModifiedTime = Instant.now();
+    }
+
+    public Instant getCreateTime() {
+        return this.createTime;
+    }
+
+    public Instant getLastModifiedTime() {
+        return this.lastModifiedTime;
+    }
+
+    public Integer getViews() {
+        return this.views;
     }
 
     public List<Comment> getComments() {
@@ -125,6 +157,7 @@ public class Topic {
 
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
+        this.lastModifiedTime = Instant.now();
     }
 
     public void addTag(Tag tag) {
@@ -174,14 +207,18 @@ public class Topic {
     }
 
     public interface Author {
-        Builder author(User author);
+        Content author(User author);
+    }
+
+    public interface Content {
+        Builder content(String content);
     }
 
     public static Title builder() {
         return new Builder();
     }
 
-    public static final class Builder implements Title, Author {
+    public static final class Builder implements Title, Author, Content {
         private String title;
         private User author;
         private String content = "";
@@ -200,7 +237,8 @@ public class Topic {
             return this;
         }
 
-        public Builder content() {
+        @Override
+        public Builder content(String content) {
             this.content = content;
             return this;
         }

@@ -59,24 +59,6 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity<>(newUser, HttpStatus.OK);
     }
 
-    // cannot add @Valid now
-    @PostMapping(path = "/create2")
-    public ResponseEntity<?> addUser2(@RequestBody User user) {
-        if (user.getUsername() == null) {
-            throw new InvalidParameterException("username cannot be null");
-        }
-
-        User newUser = User.buider()
-                .username(user.getUsername())
-                .gender(user.getProfile().getGender().orElse(null))
-                .build();
-        newUser.setEmailAddress(user.getEmailAddress().orElse(null));
-
-        newUser = userRepository.save(newUser);
-        return new ResponseEntity<>(newUser, HttpStatus.OK);
-    }
-
-
     //---------- Update a User -----------------
 
     @PutMapping(path = "/update")

@@ -38,7 +38,7 @@ public class TopicServiceImpl implements TopicService {
     @PostMapping(path = "/post")
     public ResponseEntity<?> postTopic(@Valid @RequestBody Topic topic) {
 
-        Topic newTopic = Topic.builder().title(topic.getTitle()).author(topic.getAuthor()).build();
+        Topic newTopic = Topic.builder().title(topic.getTitle()).author(topic.getAuthor()).content("hhh").build();
 
         newTopic = topicRepository.save(newTopic);
         return new ResponseEntity<>(newTopic, HttpStatus.OK);

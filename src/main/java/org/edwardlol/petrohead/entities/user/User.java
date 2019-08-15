@@ -52,7 +52,7 @@ public class User {
     /**
      * When this user is created.
      */
-    private Instant createTime;
+    private final Instant createTime;
 
     /**
      * Last time this user changed his username.
@@ -77,12 +77,12 @@ public class User {
     //----------- constructors -----------
 
     protected User() {
+        this.createTime = Instant.now();
+        this.usernameLastModifiedTime = this.createTime;
     }
 
     private User(Builder builder) {
-        this.createTime = Instant.now();
-        this.usernameLastModifiedTime = this.createTime;
-
+        this();
         this.username = builder.username;
         this.passwordHash = builder.passwordHash;
         this.emailAddress = builder.emailAddress;
@@ -100,20 +100,21 @@ public class User {
 
     // TODO: 2019-07-19 how to check conditions before set username?
     public void setUsername(String username) {
-        Preconditions.checkArgument(
-                this.profile.getPoints() > CHANGE_NAME_POINTS,
-                "You don't have enough points!");
-//
-//        Instant now = Instant.now();
-//        LocalDate start = LocalDateTime.ofInstant(now, ZoneId.systemDefault()).toLocalDate();
+        Instant now = Instant.now();
+//        LocalDate start = LocalDateTi
+//        me.ofInstant(now, ZoneId.systemDefault()).toLocalDate();
 //        LocalDate end = LocalDateTime.ofInstant(getUsernameLastModifiedTime(), ZoneId.systemDefault()).toLocalDate();
 //
 //        Preconditions.checkArgument(
 //                Period.between(start, end).getMonths() > CHANGE_NAME_PERIOD_MONTHS,
 //                "You can only change your username every " + CHANGE_NAME_PERIOD_MONTHS + " months!");
 
+//        Preconditions.checkArgument(
+//                this.profile.getPoints() >= CHANGE_NAME_POINTS,
+//                "You don't have enough points!");
+
         this.username = username;
-//        setUsernameLastModifiedTime(now);
+        setUsernameLastModifiedTime(now);
     }
 
     public Instant getCreateTime() {
@@ -202,7 +203,7 @@ public class User {
         private Gender gender;
         private LocalDate birthday;
         private String description = "";
-        private Integer points = 0; // for setting username the first time
+        private Integer points = CHANGE_NAME_POINTS; // for setting username the first time
         private Rank rank = Rank.Private;
 
 

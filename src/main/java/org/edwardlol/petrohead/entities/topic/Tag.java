@@ -1,11 +1,9 @@
 package org.edwardlol.petrohead.entities.topic;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,7 +38,6 @@ public class Tag {
 
     //----------- constructor -----------
 
-//    @PersistenceConstructor
     private Tag(String name) {
         this.name = name;
         this.topics = new HashSet<>();

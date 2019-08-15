@@ -27,7 +27,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
         ApiError apiError = ApiError.buider()
                 .httpStatus(HttpStatus.BAD_REQUEST)
-                .message("Malformed JSON request")
+//                .message("Malformed JSON request")
+                .message(ex.getMessage())
                 .debugMessage(ex)
                 .build();
 
@@ -41,6 +42,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         ApiError apiError = ApiError.buider()
                 .httpStatus(HttpStatus.NOT_FOUND)
                 .message(ex.getMessage())
+                .debugMessage(ex)
                 .build();
 
         return buildResponseEntity(apiError);
@@ -53,6 +55,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         ApiError apiError = ApiError.buider()
                 .httpStatus(HttpStatus.BAD_REQUEST)
                 .message(ex.getMessage())
+                .debugMessage(new Throwable("am i "))
                 .build();
 
         return buildResponseEntity(apiError);

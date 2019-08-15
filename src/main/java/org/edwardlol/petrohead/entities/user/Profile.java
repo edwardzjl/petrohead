@@ -165,6 +165,7 @@ public class Profile {
     public static final class Builder implements ofUser {
 
         private User user;
+        // TODO: 2019-07-26 there should be a default avatar
         private String avatar;
         private Gender gender;
         private LocalDate birthday;

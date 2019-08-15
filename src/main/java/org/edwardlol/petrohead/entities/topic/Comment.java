@@ -2,7 +2,6 @@ package org.edwardlol.petrohead.entities.topic;
 
 
 import org.edwardlol.petrohead.entities.user.User;
-import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -29,7 +28,7 @@ public class Comment {
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "author_id", referencedColumnName = "id", nullable = false)
     @NotNull
-    private final User author;
+    private User author;
 
     private final Instant createTime;
 
@@ -42,16 +41,19 @@ public class Comment {
 
     //----------- constructors -----------
 
-    @PersistenceConstructor
-    private Comment(Builder builder) {
-        this.author = builder.author;
-        this.createTime = builder.createTime;
-        this.content = builder.content;
+    protected Comment() {
+        this.createTime = Instant.now();
         this.lastModifiedTime = this.createTime;
+    }
+
+    private Comment(Builder builder) {
+        this();
+        this.author = builder.author;
+        this.content = builder.content;
         this.anonymous = builder.anonymous;
     }
 
-    //----------- getter / setters -----------
+    //----------- methods -----------
 
     private static void checkContent(String content) {
         // TODO: 2019-07-10  check comment length, and maybe other constrains
@@ -124,26 +126,26 @@ public class Comment {
 
     //----------- builder -----------
 
-    public static Builder createWithAuthor(User author) {
-        return new Builder(author);
+    public interface Author {
+        Content author(User author);
+    }
+
+    public interface Content {
+        Builder content(String content);
     }
 
     public static final class Builder implements Author, Content {
-        private final User author;
-        private final Instant createTime;
-        private String content = "";
+        private User author;
+        private String content;
         private Boolean anonymous = false;
 
-        private Builder(User author) {
-            this.author = author;
-            this.createTime = Instant.now();
-        }
 
         /**
-         * Mandatory, must be followed by {@link Author#author(User)}
+         * Mandatory, must be followed by content
          */
         @Override
         public Content author(User author) {
+            this.author = author;
             return this;
         }
 
@@ -152,13 +154,10 @@ public class Comment {
          */
         @Override
         public Builder content(String content) {
+            checkContent(content);
+            this.content = content;
             return this;
         }
-        //        public Builder content(String content) {
-//            checkContent(content);
-//            this.content = content;
-//            return this;
-//        }
 
         public Builder anonymous(Boolean anonymous) {
             this.anonymous = anonymous;
@@ -168,14 +167,6 @@ public class Comment {
         public Comment build() {
             return new Comment(this);
         }
-    }
-
-    interface Author {
-        public Content author(User author);
-    }
-
-    interface Content {
-        public Builder content(String content);
     }
 
 
